@@ -42,26 +42,41 @@ The single most important design decision: **the LLM runs when messages arrive, 
 the page loads.**
 
 ```
-data/messages.json ──► analyze.py ──►  Claude (one batched call)  ──► data/analysis.json
-   (raw inbox)         (pipeline)        structured output               (read model)
-                                                                              │
-                                                       FastAPI  GET /api/analysis
-                                                                              │
-                                                          React one-page dashboard
+                  analyze.py  ·OR·  POST /api/analyze  ("Re-run analysis" button)
+                                    │   (the only LLM triggers — both explicit)
+                                    ▼
+data/messages.json ──► pipeline.py ──► Gemini (one batched call) ──► data/analysis.json
+   (raw inbox)                          structured output              (read model)
+                                                                            │
+                                                     FastAPI  GET /api/analysis
+                                                          (read-only, never calls LLM)
+                                                                            │
+                                                        React one-page dashboard
 ```
 
-1. **Analysis pipeline (`analyze.py`)** — reads the morning's messages, makes **one
-   batched Claude call** with the full set in view (this is what makes threading and
-   contradiction-detection possible), validates the result against a Pydantic schema,
-   and writes `data/analysis.json`. Run once; the artifact is committed.
-2. **Dashboard (FastAPI + React)** — only ever *reads* `analysis.json`. It never calls
-   the LLM, so it is **deterministic**: the briefing is identical on every reload.
+1. **Analysis pipeline (`backend/pipeline.py`)** — reads the messages, makes **one
+   batched Gemini call** with the full set in view (this is what makes threading and
+   contradiction-detection possible), validates against a Pydantic schema, recomputes
+   the stats, and writes `data/analysis.json`. Triggered explicitly by the CLI
+   (`analyze.py`) or the dashboard's **Re-run analysis** button (`POST /api/analyze`).
+2. **Dashboard (FastAPI + React)** — `GET /api/analysis` only ever *reads* the committed
+   file; it never calls the LLM, so a reload is **deterministic** and identical every time.
 
-**Why deterministic matters.** A CEO reads this *instead of* their inbox. If an accidental
+**Why this split matters.** A CEO reads this *instead of* their inbox. If an accidental
 refresh re-shuffled messages between Decide / Delegate / Ignore, the tool would be
-untrustworthy. Analysis is a deliberate, separate step — not a side effect of page load.
-There is intentionally **no "re-analyse" button**. (See [Production roadmap](#production-roadmap)
-for how new messages would be handled incrementally.)
+untrustworthy. So **page load never calls the LLM** — it always reads the committed file.
+
+The LLM runs only on a **deliberate** request, through one of two equivalent paths:
+
+- **CLI** — `python analyze.py`
+- **`POST /api/analyze`** — the **"Re-run analysis"** button in the dashboard
+
+Both go through `backend/pipeline.py`. This is the difference between a *passive* trigger
+(a reload — which we forbid) and an *explicit* one (a click — which is fine, and which the
+brief's "we test it with new data" step needs). To test with a fresh inbox: drop a new
+`data/messages.json` in, click **Re-run analysis**, and the dashboard rebuilds from a live
+Gemini call. (See [Production roadmap](#production-roadmap) for doing this *incrementally*
+rather than recomputing the whole morning.)
 
 ---
 
@@ -95,23 +110,32 @@ uvicorn backend.main:app --reload --port 8000
 cd frontend && npm run dev          # http://localhost:5173
 ```
 
-### Re-running the AI analysis (needs an API key)
+### Running a live analysis (needs a free API key)
+
+Get a free key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey), then
+trigger the LLM either way:
 
 ```bash
-cp .env.example .env && echo "ANTHROPIC_API_KEY=sk-ant-..." >> .env
+cp .env.example .env && echo "GEMINI_API_KEY=..." >> .env
 export $(cat .env | xargs)
-python analyze.py                   # regenerates data/analysis.json
+
+python analyze.py                   # CLI, or…
 ```
+
+…or just click **Re-run analysis** in the dashboard (it needs the same key set in the
+backend's environment). **Testing with new data:** replace `data/messages.json`, click
+**Re-run analysis**, and the briefing rebuilds from a live Gemini call.
 
 ---
 
 ## Project structure
 
 ```
-analyze.py            # AI pipeline: messages.json -> analysis.json (run once)
+analyze.py            # CLI entry point for the pipeline
 backend/
-  main.py             # FastAPI: GET /api/analysis + serves the built SPA
-  cos.py              # system prompt + the single batched Claude call
+  main.py             # FastAPI: GET /api/analysis (read), POST /api/analyze (LLM), SPA
+  pipeline.py         # orchestration shared by the CLI + the endpoint
+  cos.py              # system prompt + the single batched Gemini call
   schema.py           # Pydantic models — the data contract
 data/
   messages.json       # input: 20 messages from one morning
@@ -148,14 +172,15 @@ Most important first, everything at a glance:
 
 - **One batched call** with all messages in time order — full context is what enables
   threading, supersede/resolve detection, and contradiction-spotting.
-- **Structured output** via a single tool whose `input_schema` is generated directly
-  from the Pydantic models (`backend/cos.py` → `backend/schema.py`), so the model's
-  output and the app's contract can never drift. The result is re-validated with Pydantic.
-- **Prompt caching** on the (large, static) system prompt.
+- **Structured output** — Gemini is given our Pydantic `Analysis` model directly as its
+  `response_schema` (`backend/cos.py` → `backend/schema.py`), so the model's output and
+  the app's contract can't drift. The JSON is re-validated with Pydantic on the way in.
 - **`stats` are recomputed in code** from the triaged messages after the call, so the
   headline counts can never disagree with the list.
-- Model: `claude-opus-4-8` by default (best reasoning for a once-per-morning job);
-  override with `COS_MODEL` (e.g. `claude-sonnet-4-6`) for a cheaper/faster run.
+- **Provider-agnostic by design** — the LLM lives behind one `analyze()` function;
+  switching to OpenAI/Anthropic/Groq is a one-file change, schema and UI untouched.
+- Model: `gemini-2.5-flash` by default (free tier, fast, strong reasoning for a
+  once-per-morning job); override with `COS_MODEL` (e.g. `gemini-2.5-pro`).
 
 ---
 

@@ -3,8 +3,8 @@ import { useState } from "react";
 import type { MessageTriage } from "../types";
 import { channelMeta } from "../lib";
 
-export function Handled({ messages }: { messages: MessageTriage[] }) {
-  const [open, setOpen] = useState(false);
+export function Handled({ messages, defaultOpen = false }: { messages: MessageTriage[]; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen);
   if (messages.length === 0) return null;
 
   return (

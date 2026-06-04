@@ -67,6 +67,10 @@ class MessageTriage(BaseModel):
     sender: str = Field(alias="from")
     subject: Optional[str] = None
     timestamp: str
+    body: Optional[str] = Field(
+        default=None,
+        description="Original message body — populated by the pipeline, not the LLM",
+    )
     category: Category
     reasoning: str = Field(description="Why this category")
     drafted_response: Optional[str] = None

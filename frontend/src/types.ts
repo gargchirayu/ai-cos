@@ -1,5 +1,7 @@
 // Mirrors backend/schema.py (the data contract). Keep in sync.
 
+export type Tab = "brief" | "flags" | "decide" | "delegate" | "review" | "others";
+
 export type Channel = "email" | "slack" | "whatsapp";
 export type Category = "ignore" | "delegate" | "decide";
 export type Status = "active" | "superseded" | "resolved";
@@ -40,6 +42,7 @@ export interface MessageTriage {
   from: string;
   subject: string | null;
   timestamp: string;
+  body: string | null;
   category: Category;
   reasoning: string;
   drafted_response: string | null;
