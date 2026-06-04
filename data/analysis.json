@@ -1,0 +1,539 @@
+{
+  "morning_of": "2026-03-18",
+  "ceo": "ceo@company.com",
+  "generated_at": "2026-06-04T19:18:54.750062+00:00",
+  "stats": {
+    "total": 20,
+    "decide": 4,
+    "delegate": 1,
+    "ignore": 3,
+    "flags": 6
+  },
+  "briefing": {
+    "greeting": "Good morning!",
+    "summary": "Your morning is dominated by a critical live production issue with the API migration requiring an immediate decision, and two urgent deal/finance deadlines. You also have several calendar conflicts for Thursday to resolve.",
+    "top_priorities": [
+      "Address the critical API migration issue with Tom Bradley immediately.",
+      "Make a decision on the Northwind deal terms with Priya Sharma by end of day.",
+      "Confirm the Series B investor meeting time with Sarah Chen and ensure revenue projections are ready by Wednesday.",
+      "Sign off on the new benefits package by Friday."
+    ],
+    "read_time_seconds": 60
+  },
+  "situations": [
+    {
+      "id": "series-b-due-diligence",
+      "title": "Series B Due Diligence & Investor Meeting",
+      "status": "active",
+      "category": "decide",
+      "urgency": "high",
+      "deadline": "2026-03-19T23:59:59Z",
+      "summary": "Meridian Ventures wants to proceed with due diligence, requiring updated revenue projections by Wednesday and a meeting on Thursday. Sarah Chen has offered to move the Thursday meeting to 10am to avoid conflicts.",
+      "what_changed": "Initially, Sarah requested a 2pm Thursday meeting and Wednesday projections. James confirmed the 2pm investor meeting. Sarah then offered 10am Thursday due to potential clashes and re-emphasized the Wednesday projection deadline.",
+      "recommendation": "Confirm the 10am slot with Sarah Chen for the investor meeting to resolve calendar conflicts and ensure the revenue projections are sent by Wednesday.",
+      "drafted_response": "Hi Sarah, 10am on Thursday works much better for me. I'll make sure the updated revenue projections are sent over by Wednesday. Looking forward to our call.",
+      "delegate_to": null,
+      "message_ids": [
+        1,
+        10,
+        18
+      ]
+    },
+    {
+      "id": "api-migration",
+      "title": "Critical API Migration Issue Affecting Payments",
+      "status": "active",
+      "category": "decide",
+      "urgency": "critical",
+      "deadline": "2026-03-18T13:45:00Z",
+      "summary": "The API migration has caused a dependency issue with the payment service, leading to intermittent checkout failures for 3% of users. Tom Bradley needs an immediate decision (within the hour) on whether to roll back (safer, 2 weeks delay) or push a hotfix (faster, risky).",
+      "what_changed": "Initially, the API migration was 60% done and on track. Then a dependency issue pushed the timeline. Now, it's escalated to a live production issue affecting user payments, requiring an urgent decision.",
+      "recommendation": "Immediately connect with Tom and key engineering leads to assess the risks and recovery paths for both rollback and hotfix options before making a decision.",
+      "drafted_response": "Tom, This is critical. Let's get on a call immediately with key engineering leads to discuss the implications of rollback vs. hotfix. I need a deeper understanding of the risks and recovery paths for both options before making a decision.",
+      "delegate_to": null,
+      "message_ids": [
+        2,
+        9,
+        16
+      ]
+    },
+    {
+      "id": "horizon-project",
+      "title": "Horizon Project Timeline Alignment",
+      "status": "resolved",
+      "category": "ignore",
+      "urgency": "low",
+      "deadline": null,
+      "summary": "Initial concerns about an over-optimistic 6-week timeline for the Horizon project have been resolved. David Morrison and Lisa Park have aligned to present a revised 10-week phased delivery (MVP at 6 weeks, full platform at 10) to the client.",
+      "what_changed": "Lisa initially reported a successful demo with no changes. David then flagged a discrepancy between the client's 6-week expectation and the realistic 10-12 week timeline. David and Lisa have since aligned on a phased 10-week delivery plan.",
+      "recommendation": "No action needed; the team has resolved the internal timeline discrepancy.",
+      "drafted_response": null,
+      "delegate_to": null,
+      "message_ids": [
+        5,
+        6,
+        17
+      ]
+    },
+    {
+      "id": "board-deck-review",
+      "title": "Board Deck Review",
+      "status": "resolved",
+      "category": "ignore",
+      "urgency": "low",
+      "deadline": null,
+      "summary": "James initially requested to push the board deck review, but has since confirmed that preliminary Q1 numbers will be available, so the review will proceed as originally scheduled for Thursday.",
+      "what_changed": "James initially requested to push the review. He later retracted this, confirming finance can provide preliminary numbers, keeping the original Thursday slot.",
+      "recommendation": "No action needed; the board deck review is on track for Thursday.",
+      "drafted_response": null,
+      "delegate_to": null,
+      "message_ids": [
+        3,
+        10
+      ]
+    },
+    {
+      "id": "vp-eng-hiring",
+      "title": "VP Engineering Candidate Shortlist",
+      "status": "active",
+      "category": "delegate",
+      "urgency": "medium",
+      "deadline": null,
+      "summary": "Rachel Kim has provided a shortlist of 4 candidates for the VP Engineering role, recommending Candidate A and Candidate C for intro calls.",
+      "what_changed": null,
+      "recommendation": "Approve intro calls for the recommended candidates and delegate the scheduling to Rachel.",
+      "drafted_response": "Rachel, Thanks for the shortlist. Please schedule 30-min intro calls with Candidate A and Candidate C for me next week. My assistant will coordinate my availability.",
+      "delegate_to": "Rachel Kim",
+      "message_ids": [
+        8
+      ]
+    },
+    {
+      "id": "northwind-deal",
+      "title": "Northwind Deal Terms Revision",
+      "status": "active",
+      "category": "decide",
+      "urgency": "high",
+      "deadline": "2026-03-18T17:00:00Z",
+      "summary": "The Northwind deal, initially closed at 120k ARR for 2 years, is now contested by their legal team who want a 1-year term with an option to renew, reducing the deal to 60k ARR. A decision is needed by end of day.",
+      "what_changed": "Priya initially announced the closure of a 120k ARR, 2-year deal. Subsequently, Northwind's legal team requested a 1-year term, halving the ARR and requiring a decision by end of day.",
+      "recommendation": "Discuss with Priya immediately to understand the implications of accepting the revised terms versus pushing back, and make a decision by end of day.",
+      "drafted_response": "Priya, Let's discuss the Northwind deal terms. What are the pros and cons of accepting the 1-year term vs. pushing back? What's the likelihood of them agreeing to the original terms if we push? I need more context to make this decision.",
+      "delegate_to": null,
+      "message_ids": [
+        12,
+        19
+      ]
+    },
+    {
+      "id": "employee-policies-benefits",
+      "title": "Employee Policies and Benefits Package",
+      "status": "active",
+      "category": "decide",
+      "urgency": "high",
+      "deadline": "2026-03-21T17:00:00Z",
+      "summary": "Alex has flagged employee grumbling about the new hybrid policy that needs addressing. Separately, the new benefits package requires your sign-off by end of day Friday to secure the current rate.",
+      "what_changed": null,
+      "recommendation": "Prioritize reviewing and signing off on the benefits package today or tomorrow to meet the Friday deadline. Schedule a separate discussion with Alex to address the hybrid policy feedback.",
+      "drafted_response": "Alex, Please send over the new benefits package for my review and sign-off. I'll prioritize it today to meet the Friday deadline. Let's also schedule a quick chat to discuss the hybrid policy feedback; please find a slot in my calendar.",
+      "delegate_to": null,
+      "message_ids": [
+        13
+      ]
+    },
+    {
+      "id": "leadership-sync",
+      "title": "Leadership Team Sync",
+      "status": "active",
+      "category": "ignore",
+      "urgency": "low",
+      "deadline": null,
+      "summary": "The leadership team sync, originally scheduled for Thursday at 2pm, has been moved to 3pm in the small meeting room due to a client visit.",
+      "what_changed": "The meeting was initially confirmed for Thursday 2pm, then moved to 3pm in a different room.",
+      "recommendation": "Note the updated time and location for the leadership sync.",
+      "drafted_response": null,
+      "delegate_to": null,
+      "message_ids": [
+        15,
+        20
+      ]
+    }
+  ],
+  "messages": [
+    {
+      "id": 1,
+      "channel": "email",
+      "from": "Sarah Chen <sarah.chen@meridianventures.com>",
+      "subject": "Follow-up: Series B timeline",
+      "timestamp": "2026-03-18T08:12:00Z",
+      "body": "Hi,\n\nGreat catching up last week. As discussed, we'd like to move forward with the due diligence process. Can we lock in a meeting this Thursday at 2pm to go through the financials? I'll have our analysts on the call as well.\n\nWould also appreciate the updated revenue projections by Wednesday if possible.\n\nBest,\nSarah",
+      "category": "decide",
+      "reasoning": "CEO needs to confirm meeting time and commit to providing projections.",
+      "drafted_response": null,
+      "delegate_to": null,
+      "situation_id": "series-b-due-diligence",
+      "status": "active",
+      "superseded_by": null
+    },
+    {
+      "id": 2,
+      "channel": "slack",
+      "from": "tom.bradley",
+      "subject": null,
+      "timestamp": "2026-03-18T08:34:00Z",
+      "body": "heads up - the API migration is about 60% done. should be wrapped by friday. no blockers right now but flagging that we might need an extra day if the auth refactor takes longer than expected.",
+      "category": "ignore",
+      "reasoning": "Initial status update, superseded by later, more critical updates.",
+      "drafted_response": null,
+      "delegate_to": null,
+      "situation_id": "api-migration",
+      "status": "superseded",
+      "superseded_by": 9
+    },
+    {
+      "id": 3,
+      "channel": "whatsapp",
+      "from": "James (COO)",
+      "subject": null,
+      "timestamp": "2026-03-18T08:45:00Z",
+      "body": "Morning. Quick one - can we push the board deck review to next week? I'm still waiting on the Q1 numbers from finance and don't want to present half-baked figures.",
+      "category": "ignore",
+      "reasoning": "Request to push board deck review was retracted by a later message.",
+      "drafted_response": null,
+      "delegate_to": null,
+      "situation_id": "board-deck-review",
+      "status": "resolved",
+      "superseded_by": null
+    },
+    {
+      "id": 4,
+      "channel": "email",
+      "from": "noreply@seczure-verify.com",
+      "subject": "URGENT: Unusual login detected on your account",
+      "timestamp": "2026-03-18T09:01:00Z",
+      "body": "We detected an unusual sign-in to your account from an unrecognized device in Lagos, Nigeria. If this wasn't you, please verify your identity immediately by clicking the link below to secure your account.\n\nVerify Now: https://seczure-verify.com/auth/reset?token=8f3k2j\n\nIf you do not verify within 24 hours, your account will be permanently suspended.\n\nSecurity Team",
+      "category": "ignore",
+      "reasoning": "This is a phishing attempt.",
+      "drafted_response": null,
+      "delegate_to": null,
+      "situation_id": null,
+      "status": "active",
+      "superseded_by": null
+    },
+    {
+      "id": 5,
+      "channel": "slack",
+      "from": "lisa.park",
+      "subject": null,
+      "timestamp": "2026-03-18T09:15:00Z",
+      "body": "FYI the Horizon project demo went well with the client yesterday. They're happy with the direction and want to see the next iteration in two weeks. No changes requested.",
+      "category": "ignore",
+      "reasoning": "Initial positive update, superseded by a more comprehensive resolution.",
+      "drafted_response": null,
+      "delegate_to": null,
+      "situation_id": "horizon-project",
+      "status": "superseded",
+      "superseded_by": 17
+    },
+    {
+      "id": 6,
+      "channel": "email",
+      "from": "David Morrison <david.m@company.com>",
+      "subject": "Horizon project - concerns",
+      "timestamp": "2026-03-18T09:22:00Z",
+      "body": "Hey,\n\nWanted to flag something about Horizon. I was on the client call yesterday and I think we're overselling the timeline. The client thinks we'll have the full platform ready in 6 weeks but realistically we're looking at 10-12 weeks minimum given the current resourcing. Lisa presented it as on track but I don't think that's accurate.\n\nThink we need to have an honest conversation internally before the next client touchpoint.\n\nDavid",
+      "category": "ignore",
+      "reasoning": "Concerns were addressed and resolved internally by a later message.",
+      "drafted_response": null,
+      "delegate_to": null,
+      "situation_id": "horizon-project",
+      "status": "resolved",
+      "superseded_by": null
+    },
+    {
+      "id": 7,
+      "channel": "whatsapp",
+      "from": "Mum",
+      "subject": null,
+      "timestamp": "2026-03-18T09:30:00Z",
+      "body": "Hi love, just checking if you're still coming for dinner on Sunday? Dad's making his lasagne. Let me know so I can get the shopping in. Also your sister says hi and wants to know if you can bring that wine from last time xx",
+      "category": "ignore",
+      "reasoning": "Personal message, not work-related.",
+      "drafted_response": null,
+      "delegate_to": null,
+      "situation_id": null,
+      "status": "active",
+      "superseded_by": null
+    },
+    {
+      "id": 8,
+      "channel": "email",
+      "from": "Rachel Kim <rachel.kim@techstaffing.io>",
+      "subject": "Candidate shortlist for VP Engineering role",
+      "timestamp": "2026-03-18T09:45:00Z",
+      "body": "Hi,\n\nAs discussed, please find attached the shortlist of 4 candidates for the VP Engineering position. All have been pre-screened and are available for interviews starting next week.\n\nI'd recommend prioritising Candidate A (ex-Stripe) and Candidate C (ex-Datadog) based on your requirements. Happy to set up 30-min intro calls whenever works.\n\nLet me know how you'd like to proceed.\n\nBest,\nRachel",
+      "category": "delegate",
+      "reasoning": "CEO needs to approve candidates and delegate scheduling of intro calls.",
+      "drafted_response": "Rachel, Thanks for the shortlist. Please schedule 30-min intro calls with Candidate A and Candidate C for me next week. My assistant will coordinate my availability.",
+      "delegate_to": "Rachel Kim",
+      "situation_id": "vp-eng-hiring",
+      "status": "active",
+      "superseded_by": null
+    },
+    {
+      "id": 9,
+      "channel": "slack",
+      "from": "tom.bradley",
+      "subject": null,
+      "timestamp": "2026-03-18T10:05:00Z",
+      "body": "update on the API migration - just found a dependency issue with the payment service. going to need to pause and figure this out. might push the timeline back to next wednesday. will keep you posted.",
+      "category": "ignore",
+      "reasoning": "Status update on API migration, superseded by critical escalation.",
+      "drafted_response": null,
+      "delegate_to": null,
+      "situation_id": "api-migration",
+      "status": "superseded",
+      "superseded_by": 16
+    },
+    {
+      "id": 10,
+      "channel": "whatsapp",
+      "from": "James (COO)",
+      "subject": null,
+      "timestamp": "2026-03-18T10:20:00Z",
+      "body": "Actually ignore my earlier message about pushing the board deck. Just spoke to finance and they can get me preliminary numbers by tomorrow. Let's keep the original Thursday slot. Also can you confirm we have the investor meeting at 2pm Thursday? Sarah from Meridian is expecting us.",
+      "category": "decide",
+      "reasoning": "Retracts earlier request, confirms board deck, and highlights investor meeting time for CEO confirmation.",
+      "drafted_response": null,
+      "delegate_to": null,
+      "situation_id": "series-b-due-diligence",
+      "status": "active",
+      "superseded_by": null
+    },
+    {
+      "id": 11,
+      "channel": "email",
+      "from": "newsletter@techdigest.com",
+      "subject": "This week in AI: 5 trends you can't ignore",
+      "timestamp": "2026-03-18T10:30:00Z",
+      "body": "Good morning,\n\nThis week's roundup covers the latest in AI regulation, new funding rounds, and why every CEO should be paying attention to agentic workflows.\n\n1. EU AI Act enforcement begins...\n2. Anthropic raises another $2B...\n3. Why agents are replacing dashboards...\n4. The hidden cost of AI technical debt...\n5. Interview: How one startup cut costs 40% with AI ops...\n\nRead the full newsletter at techdigest.com/weekly\n\nUnsubscribe",
+      "category": "ignore",
+      "reasoning": "Newsletter, not requiring action.",
+      "drafted_response": null,
+      "delegate_to": null,
+      "situation_id": null,
+      "status": "active",
+      "superseded_by": null
+    },
+    {
+      "id": 12,
+      "channel": "slack",
+      "from": "priya.sharma",
+      "subject": null,
+      "timestamp": "2026-03-18T10:45:00Z",
+      "body": "closed Northwind deal!! 120k ARR, 2 year contract. they want onboarding to start april 1st. @tom.bradley can eng support the integration timeline?",
+      "category": "delegate",
+      "reasoning": "Initial deal closure, but engineering integration needs to be confirmed.",
+      "drafted_response": "Priya, Great news on Northwind! Please coordinate with Tom Bradley to confirm engineering's capacity for the April 1st integration timeline.",
+      "delegate_to": "Priya Sharma",
+      "situation_id": "northwind-deal",
+      "status": "active",
+      "superseded_by": null
+    },
+    {
+      "id": 13,
+      "channel": "whatsapp",
+      "from": "Alex (Head of People)",
+      "subject": null,
+      "timestamp": "2026-03-18T11:00:00Z",
+      "body": "hey so um yeah I wanted to talk to you about something, it's not super urgent or anything but basically I had a chat with a couple of the engineering team yesterday and there's some grumbling about the new hybrid policy, like people feel it was kind of sprung on them without much consultation you know, and I think maybe we should address it before it becomes a bigger thing, oh and also completely separately I need your sign-off on the new benefits package by end of day Friday because the provider needs confirmation before the 21st or we lose the rate, anyway let me know when you have 5 mins to chat about the hybrid thing",
+      "category": "decide",
+      "reasoning": "CEO needs to sign off on benefits package by Friday and address hybrid policy feedback.",
+      "drafted_response": null,
+      "delegate_to": null,
+      "situation_id": "employee-policies-benefits",
+      "status": "active",
+      "superseded_by": null
+    },
+    {
+      "id": 14,
+      "channel": "email",
+      "from": "Mark Zhang <mark.z@company.com>",
+      "subject": "Quick update - marketing Q2 plan",
+      "timestamp": "2026-03-18T11:15:00Z",
+      "body": "Hi,\n\nJust wanted to let you know the Q2 marketing plan is finalised and the team is executing. No decisions needed from your end right now - just keeping you in the loop.\n\nHighlights: launching the new brand campaign in April, increasing paid spend by 20%, and testing two new channels (podcast sponsorships and LinkedIn thought leadership).\n\nWill share the full deck at next month's all-hands.\n\nMark",
+      "category": "ignore",
+      "reasoning": "FYI, no action needed.",
+      "drafted_response": null,
+      "delegate_to": null,
+      "situation_id": null,
+      "status": "active",
+      "superseded_by": null
+    },
+    {
+      "id": 15,
+      "channel": "email",
+      "from": "Laura Singh <laura.s@company.com>",
+      "subject": "RE: Thursday meeting",
+      "timestamp": "2026-03-18T11:30:00Z",
+      "body": "Hi,\n\nConfirming the leadership team sync is booked for Thursday at 2pm in the main boardroom. Agenda: Q1 review, hiring update, and Horizon project status.\n\nPlease let me know if you need anything added to the agenda.\n\nThanks,\nLaura",
+      "category": "ignore",
+      "reasoning": "Confirms leadership sync, superseded by room/time change.",
+      "drafted_response": null,
+      "delegate_to": null,
+      "situation_id": "leadership-sync",
+      "status": "superseded",
+      "superseded_by": 20
+    },
+    {
+      "id": 16,
+      "channel": "slack",
+      "from": "tom.bradley",
+      "subject": null,
+      "timestamp": "2026-03-18T11:45:00Z",
+      "body": "update on the payment service dependency - it's worse than I thought. the issue affects live transactions, not just the migration. we're seeing intermittent failures on checkout for about 3% of users right now. need a decision on whether to roll back the partial migration or push through a hotfix. rolling back is safer but sets us back 2 weeks. hotfix is faster but risky. need an answer in the next hour.",
+      "category": "decide",
+      "reasoning": "Critical live production issue requiring immediate CEO decision.",
+      "drafted_response": null,
+      "delegate_to": null,
+      "situation_id": "api-migration",
+      "status": "active",
+      "superseded_by": null
+    },
+    {
+      "id": 17,
+      "channel": "email",
+      "from": "David Morrison <david.m@company.com>",
+      "subject": "RE: Horizon project - update",
+      "timestamp": "2026-03-18T12:00:00Z",
+      "body": "Hey,\n\nFollowing up on my earlier email. I spoke to Lisa and we've aligned. She agrees the 6-week timeline was optimistic. We're going to present a revised 10-week timeline to the client at the next touchpoint and frame it as a phased delivery (MVP at 6 weeks, full platform at 10).\n\nSo this is handled - no action needed from you on this anymore.\n\nDavid",
+      "category": "ignore",
+      "reasoning": "Confirms internal resolution of Horizon project timeline concerns.",
+      "drafted_response": null,
+      "delegate_to": null,
+      "situation_id": "horizon-project",
+      "status": "resolved",
+      "superseded_by": null
+    },
+    {
+      "id": 18,
+      "channel": "whatsapp",
+      "from": "Sarah Chen (Meridian Ventures)",
+      "subject": null,
+      "timestamp": "2026-03-18T12:15:00Z",
+      "body": "Hi - just checking in on Thursday. I realise 2pm might clash with your internal meetings. Happy to do 10am instead if that's easier? Let me know. Also just to flag, our partners meeting is the following Monday so ideally we'd have the revenue projections before Thursday's call.",
+      "category": "decide",
+      "reasoning": "Offers alternative meeting time and reiterates projection deadline, requiring CEO decision.",
+      "drafted_response": null,
+      "delegate_to": null,
+      "situation_id": "series-b-due-diligence",
+      "status": "active",
+      "superseded_by": null
+    },
+    {
+      "id": 19,
+      "channel": "slack",
+      "from": "priya.sharma",
+      "subject": null,
+      "timestamp": "2026-03-18T12:30:00Z",
+      "body": "bit of an issue with the Northwind deal I announced earlier. their legal team just came back and said they can't sign the 2-year term. they want 1 year with an option to renew. that drops the deal to 60k ARR. do we accept or push back? they're expecting an answer by end of day.",
+      "category": "decide",
+      "reasoning": "Critical decision needed on revised Northwind deal terms by end of day.",
+      "drafted_response": null,
+      "delegate_to": null,
+      "situation_id": "northwind-deal",
+      "status": "active",
+      "superseded_by": null
+    },
+    {
+      "id": 20,
+      "channel": "email",
+      "from": "Laura Singh <laura.s@company.com>",
+      "subject": "RE: Thursday meeting - room change",
+      "timestamp": "2026-03-18T12:45:00Z",
+      "body": "Hi,\n\nSmall update - the main boardroom is booked for a client visit on Thursday afternoon. I've moved the leadership sync to 3pm in the small meeting room instead. Updated calendar invite sent.\n\nThanks,\nLaura",
+      "category": "ignore",
+      "reasoning": "Logistics update for leadership sync.",
+      "drafted_response": null,
+      "delegate_to": null,
+      "situation_id": "leadership-sync",
+      "status": "active",
+      "superseded_by": null
+    }
+  ],
+  "flags": [
+    {
+      "id": "phishing-attempt",
+      "type": "security",
+      "severity": "high",
+      "title": "Phishing Email Detected",
+      "detail": "An email from 'noreply@seczure-verify.com' (Message 4) is a phishing attempt, falsely claiming an unusual login and demanding verification via a suspicious link.",
+      "message_ids": [
+        4
+      ],
+      "recommendation": "Do not click the link. Delete the email and report it to IT."
+    },
+    {
+      "id": "thursday-meeting-conflict",
+      "type": "conflict",
+      "severity": "high",
+      "title": "Multiple Meetings Clashing on Thursday",
+      "detail": "You have three critical meetings scheduled for Thursday: Series B Due Diligence with Meridian Ventures (Sarah Chen, Message 1, 10, 18) - originally 2pm, now flexible to 10am; Board Deck Review (James, Message 10) - confirmed for original Thursday slot (implied 2pm); Leadership Team Sync (Laura Singh, Message 15, 20) - originally 2pm, now moved to 3pm. The 2pm slot is double-booked by James and Sarah (if not moved). The 3pm slot for Leadership Sync is now clear if the investor meeting moves to 10am.",
+      "message_ids": [
+        1,
+        3,
+        10,
+        15,
+        18,
+        20
+      ],
+      "recommendation": "Confirm the 10am slot with Sarah Chen for the investor meeting to resolve the 2pm conflict. Ensure James is aware of the investor meeting time. The Leadership Sync is now at 3pm."
+    },
+    {
+      "id": "revenue-projections-deadline",
+      "type": "deadline",
+      "severity": "high",
+      "title": "Revenue Projections Due Wednesday",
+      "detail": "Sarah Chen from Meridian Ventures (Message 1, 18) requires updated revenue projections by Wednesday, ideally before Thursday's investor meeting.",
+      "message_ids": [
+        1,
+        18
+      ],
+      "recommendation": "Prioritize preparing and sending the updated revenue projections to Meridian Ventures by Wednesday."
+    },
+    {
+      "id": "api-migration-escalation",
+      "type": "escalation",
+      "severity": "high",
+      "title": "Live Payment Service Issue",
+      "detail": "Tom Bradley (Message 16) reports that the API migration has caused a dependency issue affecting live transactions, leading to intermittent checkout failures for 3% of users. A decision on rollback vs. hotfix is needed within the hour.",
+      "message_ids": [
+        9,
+        16
+      ],
+      "recommendation": "Immediately engage with Tom and the engineering team to make a critical decision on the resolution path."
+    },
+    {
+      "id": "benefits-package-deadline",
+      "type": "deadline",
+      "severity": "high",
+      "title": "New Benefits Package Sign-off by Friday",
+      "detail": "Alex (Head of People, Message 13) needs your sign-off on the new benefits package by end of day Friday (March 21st) to secure the current rate with the provider.",
+      "message_ids": [
+        13
+      ],
+      "recommendation": "Review and sign off on the benefits package today or tomorrow to meet the Friday deadline."
+    },
+    {
+      "id": "northwind-deal-deadline",
+      "type": "deadline",
+      "severity": "high",
+      "title": "Northwind Deal Terms Decision by End of Day",
+      "detail": "Priya Sharma (Message 19) needs a decision by end of day on whether to accept Northwind's revised offer of a 1-year contract (60k ARR) or push back for the original 2-year term (120k ARR).",
+      "message_ids": [
+        19
+      ],
+      "recommendation": "Discuss with Priya immediately to understand the implications and strategy before responding to Northwind."
+    }
+  ]
+}
