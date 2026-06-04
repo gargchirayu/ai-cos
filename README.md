@@ -1,224 +1,93 @@
 # AI Chief of Staff
 
-An AI system that reads a CEO's morning communications across **email, Slack, and
-WhatsApp**, filters the noise, and hands back a calm, trustworthy picture of the day:
-
-- **Triage** — every message classified **Ignore / Delegate / Decide**, each with a
-  reason and a drafted response.
-- **Flags** — the things the CEO should simply *know* (security, deadlines, conflicts).
-- **Daily briefing** — one screen the CEO can read in **under two minutes**.
-
-> Built for the Innate AI "AI Chief of Staff" assessment. Sample data is one real
-> morning of 20 messages (`data/messages.json`).
+An AI system that processes a CEO's morning messages across email, Slack, and WhatsApp and produces a clean, actionable briefing — so the CEO reads one dashboard instead of 20+ messages. It triages every message, surfaces critical flags, and delivers a daily briefing readable in under 2 minutes.
 
 ---
 
-## The core idea: don't triage 20 messages — reason about the *morning*
+## Features
 
-The naïve version of this task classifies 20 messages independently. But a CEO's inbox
-isn't 20 independent items — it's a handful of **situations that evolve, contradict each
-other, and resolve** over a few hours. The interesting signal lives in the *relationships
-between* messages, not the messages themselves. In this dataset alone:
-
-| What happens | Messages | Why it matters |
-|---|---|---|
-| **Escalation** | #2 → #9 → #16 | A routine "migration 60% done, no blockers" quietly becomes a **live payment outage** failing checkout for 3% of users, needing a decision within the hour. |
-| **Retraction** | #3 → #10 | The COO asks to push the board deck, then takes it back. Triaging #3 on its own would surface a decision that **no longer exists**. |
-| **Contradiction → resolution** | #5 vs #6 → #17 | Product says Horizon is "on track"; another lead says the timeline is oversold. The team then aligns — **the CEO should not be pulled in, but should know the first report was over-optimistic.** |
-| **Deal erosion** | #12 → #19 | A 120k ARR win is halved to 60k by legal hours later. The *win* is noise; the *revised terms* need a same-day call. |
-| **Phishing** | #4 | A credential-harvesting email dressed up as a security alert. |
-| **Cross-channel + calendar clash** | #1, #18, #15, #20 | The same investor appears on email and WhatsApp; a Thursday 2pm double-booking quietly self-resolves. |
-
-So this system threads messages into **situations**, tracks each thread's
-`active / superseded / resolved` state, and shows the CEO the **net current reality** —
-plus a short, urgency-ranked decision queue. That is where the "quality of thinking"
-goes, and it's what makes the dashboard trustworthy rather than just a summary.
+- **Tabbed dashboard** — Brief, Flags, Decide, Delegate, Review, and Others tabs keep sections focused and scannable
+- **Daily briefing** — a 2–3 sentence summary of the morning with an interactive priority checklist (tick off tasks as you go)
+- **Situation threading** — related messages are grouped into evolving stories; the system tracks which messages supersede, escalate, or resolve each other
+- **Message triage** — every message classified as Ignore / Delegate / Decide, each with a one-line reason
+- **Flags** — security risks, missed deadlines, contradictions, and calendar conflicts surfaced with a specific recommended action
+- **Drafted replies** — editable draft responses for every Decide and Delegate item, with a direct "Reply via Mail" or "Open in WhatsApp" button
+- **Read original messages** — expand any situation to read the actual source messages, not just the AI's summary
+- **Review tab** — team-handled situations shown with a note box to draft a response if still needed
+- **Refresh inbox** — re-run the AI analysis over a new `messages.json` at any time from the dashboard
 
 ---
 
-## Architecture: an *ingest-time* AI, a *deterministic* dashboard
+## How to run
 
-The single most important design decision: **the LLM runs when messages arrive, not when
-the page loads.**
+**Prerequisites:** Python 3.11+, Node.js 18+
 
-```
-                  analyze.py  ·OR·  POST /api/analyze  ("Re-run analysis" button)
-                                    │   (the only LLM triggers — both explicit)
-                                    ▼
-data/messages.json ──► pipeline.py ──► Gemini (one batched call) ──► data/analysis.json
-   (raw inbox)                          structured output              (read model)
-                                                                            │
-                                                     FastAPI  GET /api/analysis
-                                                          (read-only, never calls LLM)
-                                                                            │
-                                                        React one-page dashboard
-```
-
-1. **Analysis pipeline (`backend/pipeline.py`)** — reads the messages, makes **one
-   batched Gemini call** with the full set in view (this is what makes threading and
-   contradiction-detection possible), validates against a Pydantic schema, recomputes
-   the stats, and writes `data/analysis.json`. Triggered explicitly by the CLI
-   (`analyze.py`) or the dashboard's **Re-run analysis** button (`POST /api/analyze`).
-2. **Dashboard (FastAPI + React)** — `GET /api/analysis` only ever *reads* the committed
-   file; it never calls the LLM, so a reload is **deterministic** and identical every time.
-
-**Why this split matters.** A CEO reads this *instead of* their inbox. If an accidental
-refresh re-shuffled messages between Decide / Delegate / Ignore, the tool would be
-untrustworthy. So **page load never calls the LLM** — it always reads the committed file.
-
-The LLM runs only on a **deliberate** request, through one of two equivalent paths:
-
-- **CLI** — `python analyze.py`
-- **`POST /api/analyze`** — the **"Re-run analysis"** button in the dashboard
-
-Both go through `backend/pipeline.py`. This is the difference between a *passive* trigger
-(a reload — which we forbid) and an *explicit* one (a click — which is fine, and which the
-brief's "we test it with new data" step needs). To test with a fresh inbox: drop a new
-`data/messages.json` in, click **Re-run analysis**, and the dashboard rebuilds from a live
-Gemini call. (See [Production roadmap](#production-roadmap) for doing this *incrementally*
-rather than recomputing the whole morning.)
-
----
-
-## Running it
-
-The dashboard ships with a pre-computed `data/analysis.json`, so **you can run the UI
-without an API key.**
-
-### Quick start (one command)
+### One-command shortcut
 
 ```bash
-./run.sh          # installs deps, builds the frontend, serves on http://localhost:8000
+./run.sh    # installs deps, builds frontend, starts the server — all in one
 ```
-
-Then open **http://localhost:8000**.
-
-### Manual
+### Detailed steps:
+### 1. Clone and install
 
 ```bash
+git clone https://github.com/gargchirayu/ai-cos.git
+cd ai-cos
 pip install -r requirements.txt
 cd frontend && npm install && npm run build && cd ..
+```
+
+### 2. Run the app
+
+```bash
 uvicorn backend.main:app --port 8000
 ```
 
-### Dev mode (hot reload)
+Open **http://localhost:8000** in your browser.
+
+The app ships with a pre-analysed `data/analysis.json`, so it loads immediately — no API key needed just to view the dashboard.
+
+### 3. Run a live AI analysis (optional — needs a free API key)
+
+Get a free Gemini API key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey), then:
 
 ```bash
-# terminal 1 — API
-uvicorn backend.main:app --reload --port 8000
-# terminal 2 — Vite dev server (proxies /api to :8000)
-cd frontend && npm run dev          # http://localhost:5173
+cp .env.example .env
+# Open .env and add your key: GEMINI_API_KEY=your_key_here
 ```
 
-### Running a live analysis (needs a free API key)
+Then, rerun the server, click **Refresh inbox** in the dashboard — it runs the pipeline live.
 
-Get a free key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey), then
-trigger the LLM either way:
-
-```bash
-cp .env.example .env && echo "GEMINI_API_KEY=..." >> .env
-export $(cat .env | xargs)
-
-python analyze.py                   # CLI, or…
-```
-
-…or just click **Re-run analysis** in the dashboard (it needs the same key set in the
-backend's environment). **Testing with new data:** replace `data/messages.json`, click
-**Re-run analysis**, and the briefing rebuilds from a live Gemini call.
+**To test with different messages:** replace `data/messages.json` with your own file in the same format, then run `python analyze.py` or click Refresh inbox.
 
 ---
 
-## Project structure
+## How I approached this
 
-```
-analyze.py            # CLI entry point for the pipeline
-backend/
-  main.py             # FastAPI: GET /api/analysis (read), POST /api/analyze (LLM), SPA
-  pipeline.py         # orchestration shared by the CLI + the endpoint
-  cos.py              # system prompt + the single batched Gemini call
-  schema.py           # Pydantic models — the data contract
-data/
-  messages.json       # input: 20 messages from one morning
-  analysis.json       # committed, pre-computed read model
-frontend/
-  src/App.tsx         # dashboard layout
-  src/components/*     # Briefing, Flags, SituationCard, Handled, Header…
-  src/types.ts        # TS mirror of schema.py
-run.sh                # build + serve in one command
-```
+The brief asks for triage, flags, and a daily briefing. The obvious implementation would classify each of the 20 messages one by one and produce three lists. I didn't think that was the interesting problem.
 
----
+The interesting problem is that a CEO's inbox on any given morning isn't 20 independent items — it's a handful of *situations* unfolding in real time. A Slack message at 8am saying "API migration is 60% done, no blockers" and a Slack message at 11:45am saying "live checkout is failing for 3% of users, need a decision in the next hour" are not two separate things to triage. They're one escalating situation, and the CEO needs to see the arc — not two items in a list.
 
-## How the dashboard is laid out (UX for a time-poor reader)
+So the design question I started with wasn't *how do I classify messages* but *how do I show someone the net state of their morning after 20 messages have already happened*. That led to situation threading as the core abstraction: cluster related messages, track whether each thread is active, superseded, or resolved, and show the CEO what's true right now — not a replay of everything that arrived.
 
-Most important first, everything at a glance:
+From there, a few things followed naturally. The AI needed to see all 20 messages at once (a single batched call) rather than per-message — otherwise it can't detect that message 3 was retracted by message 10, or that messages 2, 9, and 16 are the same escalating incident. The dashboard needed to be deterministic — a CEO tool that reshuffles decisions on accidental reload isn't trustworthy. And the UX needed to be tab-based and compact, because a time-poor person isn't going to scroll through a long page to find what they need to act on.
 
-1. **Header** — date + live counts (Decide / Delegate / Ignore / Flags) + read time.
-2. **Daily Briefing** — greeting, a 2–3 sentence headline, and the handful of priorities
-   that actually matter, in order. The <2-minute deliverable.
-3. **Flags** — security, deadlines, contradictions, conflicts; each with a recommendation.
-4. **Needs your decision** — Decide situations as cards, urgency-ranked, with deadline
-   countdowns, a recommendation, and a **copy-ready drafted reply**.
-5. **Delegate** — who should own it + a drafted hand-off.
-6. **Handled by the team** — situations that resolved themselves (e.g. the Horizon
-   timeline) so the CEO can stay informed without acting.
-7. **Filtered out** — the full ledger of everything triaged as Ignore (noise, FYIs,
-   superseded, personal), collapsed. Expand any situation to see its **message timeline**
-   and how it evolved — the AI's reasoning, made inspectable.
-
----
-
-## How the AI is prompted
-
-- **One batched call** with all messages in time order — full context is what enables
-  threading, supersede/resolve detection, and contradiction-spotting.
-- **Structured output** — Gemini is given our Pydantic `Analysis` model directly as its
-  `response_schema` (`backend/cos.py` → `backend/schema.py`), so the model's output and
-  the app's contract can't drift. The JSON is re-validated with Pydantic on the way in.
-- **`stats` are recomputed in code** from the triaged messages after the call, so the
-  headline counts can never disagree with the list.
-- **Provider-agnostic by design** — the LLM lives behind one `analyze()` function;
-  switching to OpenAI/Anthropic/Groq is a one-file change, schema and UI untouched.
-- Model: `gemini-2.5-flash` by default (free tier, fast, strong reasoning for a
-  once-per-morning job); override with `COS_MODEL` (e.g. `gemini-2.5-pro`).
+The "Reply via Mail" and "Open in WhatsApp" buttons were a deliberate product decision. The point was to show that a real Chief of Staff doesn't just tell you what to do — they hand you a pre-written response and remove as much friction from acting on it as possible. The draft is editable, the reply button is wired to the right channel and recipient, and the whole thing is meant to feel like a handoff, not a report.
 
 ---
 
 ## Assumptions
 
-- A static, single-morning dataset; "today" is **Wednesday 18 March 2026** (the date in
-  the data). Deadline countdowns are relative to the moment the briefing was generated.
-- Analysis is **pre-computed and committed**; the dashboard is read-only and
-  deterministic. Re-analysis is an explicit pipeline step, never triggered by page load.
-- The CEO is `ceo@company.com`; senders' names and roles are inferred from message content.
-- Delegate owners are inferred from organisational signals in the messages.
-- **Drafted responses are suggestions for the CEO to review and send — never auto-sent**,
-  and the model is instructed not to invent facts or commitments not in the messages.
-- No auth / single user (local demo). The API key is only needed to re-run the pipeline
-  and is read from the environment — never committed.
+- Messages are loaded from a static JSON file; there is no live connection to email, Slack, or WhatsApp in this version. A live production-ready build would scrape messages from different platforms first and then run the analysis.
+- New messages are manually loaded into `messages.json` — there is no background polling or webhook to capture incoming messages automatically
+- The CEO's identity and team roles are inferred from message content; no org chart or contact directory is provided
+- Drafted responses are suggestions for the CEO to review before sending — the system never sends anything automatically
+- Deadline countdowns are calculated relative to the time the analysis was generated, assuming that it will be done first thing in the morning
+- No authentication — this is a single-user local tool, meant for the CEO only; the API key is also read from the environment directly. In a prodction-ready build, there should be an authentication for the user and the LLM API call.
 
-## Key decisions
+## Limitations
 
-- **Reason about situations, not isolated messages** — the threading/supersede/resolve
-  layer is the product, on top of the literal per-message triage the brief asks for.
-- **Ingest-time AI + deterministic read model** — the right production shape, and the
-  reason an accidental reload can't destabilise the CEO's view.
-- **One batched LLM call** for full cross-message context (vs. lossy per-message calls).
-- **Schema-first** (Pydantic ⇄ tool schema ⇄ TS types) for reliable, type-safe rendering.
-- **Python (FastAPI) + React (Vite/Tailwind)** — a clean AI backend and a polished,
-  compact single-page UI.
-
-## Production roadmap
-
-This is a 60-minute build; a production version would add:
-
-- **Incremental ingest** — an endpoint that classifies *only newly arrived* messages and
-  merges them into existing situations, rather than recomputing the morning. New mail
-  updates a thread's state (e.g. flips it to `resolved`) without re-shuffling settled
-  triage — the natural extension of the pipeline/dashboard split.
-- **Real connectors** — Gmail / Slack / WhatsApp Business APIs in place of the static file.
-- **Actions from the dashboard** — send a draft, create a calendar hold, assign a delegate.
-- **Feedback loop** — let the CEO correct a triage and feed it back as few-shot guidance.
-- **Confidence + provenance** — surface model confidence and link every claim to its
-  source message; human-in-the-loop on low-confidence Decides.
-- **Eval harness** — a labelled set so prompt/model changes can be regression-tested.
+- **Re-running on the same messages may produce a different analysis** — this is an inherent LLM non-determinism issue. For a production system, messages that have already been analysed would be stored with their triage result and not re-fed to the model; only genuinely new messages would trigger a new call
+- **Email and WhatsApp reply buttons are integrated to demonstrate the product vision** — the mailto: and WhatsApp Web links work, but a polished production version would use the Gmail API, Slack Web API, and WhatsApp Business API to send directly, with OAuth authentication and sent-message tracking
+- **A single LLM call processes the entire inbox** — this works well for a morning's worth of messages but would need rethinking at scale (e.g. hundreds of messages, or a multi-day backlog)
+- **Situation threading quality depends on prompt and model** — the groupings and supersede/resolve detection are generally strong but can occasionally be over- or under-grouped; a production system would include a feedback mechanism for the CEO to correct the AI's judgment
