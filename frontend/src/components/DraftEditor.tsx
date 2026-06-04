@@ -40,10 +40,12 @@ function ReplyAction({
   if (!draft.trim() || !channel) return null;
 
   if (channel === "email" && recipientEmail) {
-    const params = new URLSearchParams();
-    if (subject) params.set("subject", `Re: ${subject}`);
-    params.set("body", draft);
-    const href = `mailto:${recipientEmail}?${params.toString()}`;
+    // URLSearchParams encodes spaces as '+' (form-encoding), but mailto: needs %20.
+    // Build the query string with encodeURIComponent directly.
+    const parts: string[] = [];
+    if (subject) parts.push(`subject=${encodeURIComponent(`Re: ${subject}`)}`);
+    parts.push(`body=${encodeURIComponent(draft)}`);
+    const href = `mailto:${recipientEmail}?${parts.join("&")}`;
     return (
       <a
         href={href}
